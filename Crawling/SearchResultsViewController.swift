@@ -15,6 +15,7 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet var appsTableView: UITableView
     var tableData: NSArray = NSArray()
     var api: APIController = APIController()
+    var imageCache = NSMutableDictionary()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +34,7 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+        
         var cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as UITableViewCell
         
         if cell == nil {
@@ -41,16 +43,40 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         
         var rowData: NSDictionary = self.tableData[indexPath.row] as NSDictionary
         
-        cell.text = rowData["trackName"] as String
-        
-        var urlString: NSString = rowData["artworkUrl60"] as NSString
-        var imgURL: NSURL = NSURL(string: urlString)
-        
-        var imgData: NSData = NSData(contentsOfURL: imgURL)
-        cell.image = UIImage(data: imgData)
+        let cellText: String? = rowData["trackName"] as? String
+        cell.text = cellText
+        cell.image = UIImage(named: "Blank52")
         
         var formattedPrice: NSString = rowData["formattedPrice"] as NSString
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            var urlString: NSString = rowData["artworkUrl60"] as NSString
+            var image: UIImage? = self.imageCache.valueForKey(urlString) as? UIImage
+            
+            if( !image? ) {
+                var imgURL: NSURL = NSURL(string: urlString)
+                var request: NSURLRequest = NSURLRequest(URL: imgURL)
+                var urlConnection: NSURLConnection = NSURLConnection(request: request, delegate: self)
+                
+                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+                    if !error? {
+                        image = UIImage(data: data)
+                        self.imageCache.setValue(image, forKey: urlString)
+                        cell.image = image
+                    }
+                    else {
+                        println("Error: \(error.localizedDescription)")
+                    }
+                })
+            }
+            else {
+                cell.image = image
+            }
+
+        })
+        
         cell.detailTextLabel.text = formattedPrice
+            
         return cell
     }
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		420C5EC6195B361100D67298 /* Blank52.png in Resources */ = {isa = PBXBuildFile; fileRef = 420C5EC5195B361100D67298 /* Blank52.png */; };
 		424A4057195A6BFA0084C6D4 /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424A4056195A6BFA0084C6D4 /* APIController.swift */; };
 		42D4F1A11959D07C008D9350 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D4F1A01959D07C008D9350 /* AppDelegate.swift */; };
 		42D4F1A31959D07C008D9350 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D4F1A21959D07C008D9350 /* SearchResultsViewController.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		420C5EC5195B361100D67298 /* Blank52.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Blank52.png; sourceTree = "<group>"; };
 		424A4056195A6BFA0084C6D4 /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		42D4F19B1959D07C008D9350 /* Crawling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawling.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42D4F19F1959D07C008D9350 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 		42D4F19D1959D07C008D9350 /* Crawling */ = {
 			isa = PBXGroup;
 			children = (
+				420C5EC5195B361100D67298 /* Blank52.png */,
 				42D4F1A01959D07C008D9350 /* AppDelegate.swift */,
 				42D4F1A21959D07C008D9350 /* SearchResultsViewController.swift */,
 				424A4056195A6BFA0084C6D4 /* APIController.swift */,
@@ -192,6 +195,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				420C5EC6195B361100D67298 /* Blank52.png in Resources */,
 				42D4F1A61959D07C008D9350 /* Main.storyboard in Resources */,
 				42D4F1A81959D07C008D9350 /* Images.xcassets in Resources */,
 			);
