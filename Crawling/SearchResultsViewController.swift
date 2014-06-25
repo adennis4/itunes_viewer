@@ -14,12 +14,13 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     
     @IBOutlet var appsTableView: UITableView
     var tableData: NSArray = NSArray()
-    var api: APIController = APIController()
     var imageCache = NSMutableDictionary()
+    @lazy var api: APIController = APIController(delegate: self)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.api.delegate = self
+        self.api = APIController(delegate: self)
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         api.searchItunesFor("Angry Birds")
         // Do any additional setup after loading the view, typically from a nib.
     }

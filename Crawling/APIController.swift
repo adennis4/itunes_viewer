@@ -12,10 +12,14 @@ protocol APIControllerProtocol {
     func didReceiveAPIResults(results: NSDictionary)
 }
 
-class APIController: NSObject {
+class APIController {
     
-    var data: NSMutableData = NSMutableData()
     var delegate: APIControllerProtocol?
+
+    init(delegate: APIControllerProtocol?) {
+        self.delegate = delegate
+    }
+    
     
     func searchItunesFor(searchTerm: String) {
         var itunesSearchTerm = searchTerm.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
@@ -24,26 +28,24 @@ class APIController: NSObject {
         var urlPath = "https://itunes.apple.com/search?term=\(escapedSearchTerm)&media=software"
         var url: NSURL = NSURL(string: urlPath)
         var request: NSURLRequest = NSURLRequest(URL: url)
-        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: false)
-        
         println("Search iTunes API at URL \(url)")
         
-        connection.start()
+        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+            if error? {
+                println("ERROR: \(error.localizedDescription)")
+            }
+            else {
+                var error: NSError?
+                let jsonResult: NSDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &error) as NSDictionary
+                
+                if error? {
+                    println("HTTP Error: \(error?.localizedDescription)")
+                }
+                else {
+                    println("Results received")
+                    self.delegate?.didReceiveAPIResults(jsonResult)
+                }
+            }
+        })
     }
-
-    func connection(didReceiveResponse: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
-        self.data = NSMutableData()
-    }
-    
-    func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
-        self.data.appendData(data)
-    }
-    
-    func connectionDidFinishLoading(connection: NSURLConnection!) {
-        var err: NSError
-        var jsonResult: NSDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSDictionary
-        
-        delegate?.didReceiveAPIResults(jsonResult)
-    }
-
 }
