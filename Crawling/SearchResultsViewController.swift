@@ -10,7 +10,9 @@ import UIKit
 
 class SearchResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, APIControllerProtocol {
     
-    @IBOutlet var appsTableView :UITableView
+    let kCellIdentifier: String = "SearchResultCell"
+    
+    @IBOutlet var appsTableView: UITableView
     var tableData: NSArray = NSArray()
     var api: APIController = APIController()
 
@@ -31,7 +33,12 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "MyTestCell")
+        var cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as UITableViewCell
+        
+        if cell == nil {
+            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: kCellIdentifier)
+        }
+        
         var rowData: NSDictionary = self.tableData[indexPath.row] as NSDictionary
         
         cell.text = rowData["trackName"] as String
@@ -45,6 +52,18 @@ class SearchResultsViewController: UIViewController, UITableViewDataSource, UITa
         var formattedPrice: NSString = rowData["formattedPrice"] as NSString
         cell.detailTextLabel.text = formattedPrice
         return cell
+    }
+    
+    func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+        var rowData: NSDictionary = self.tableData[indexPath.row] as NSDictionary
+        var name: String = rowData["trackName"] as String
+        var formattedPrice: String = rowData["formattedPrice"] as String
+        
+        var alert: UIAlertView = UIAlertView()
+        alert.title = name
+        alert.message = formattedPrice
+        alert.addButtonWithTitle("OK")
+        alert.show()
     }
     
     func didReceiveAPIResults(results: NSDictionary) {
